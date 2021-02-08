@@ -27,15 +27,10 @@ class Dataset(torch.utils.data.Dataset):
             return_tensors='pt')
 
 
-def get_data_from_h5(file):
+def get_data_from_h5_bert(file):
     with h5py.File(file, 'r') as ds:
-        labels = ds['labels'][:]
-        labels_one_hot = ds['labels_one_hot'][:]
-        images = ds['images'][:]
         captions = ds['captions'][:]
-        bow_repr = ds['bag_of_words'][:]
-        bow_terms = ds['bow_terms'][:]
-    return images, labels_one_hot, labels, captions, bow_repr, bow_terms
+    return captions
 
 
 def remove_punctuation(string):
@@ -111,10 +106,9 @@ print('# Load data')
 ########################################################################################################################
 
 dataset_file = FILEPATH + 'dataset_RSICD.h5'
+# dataset_file = r"/media/george/Data/RS data/dataset_RSICD.h5"
 print('dataset_file:', dataset_file)
-images, labels_one_hot, labels, captions, bow_repr, bow_terms = get_data_from_h5(dataset_file)
-print("'images' shape", images.shape)
-print("'labels_one_hot' shape", labels_one_hot.shape)
+captions = get_data_from_h5_bert(dataset_file)
 print("'captions' shape", captions.shape)
 
 ########################################################################################################################
@@ -161,7 +155,8 @@ for c in new_captions:
     toks = tokenizer.encode(c, max_length=128)
     token_lens.append(len(toks))
 
-print('Max len:', max(token_lens))
+max_token_len = max(token_lens)
+print('Max len:', max_token_len)
 
 # import seaborn as sns
 # sns.displot(token_lens)
@@ -171,7 +166,7 @@ print('Max len:', max(token_lens))
 print('# Dataset and Dataloader')
 ########################################################################################################################
 
-captions_dataset = Dataset(new_captions, tokenizer, max_len=26)
+captions_dataset = Dataset(new_captions, tokenizer, max_len=max_token_len)
 captions_dataloader = torch.utils.data.DataLoader(captions_dataset, batch_size=16, shuffle=False)
 print(captions_dataset[1337])
 

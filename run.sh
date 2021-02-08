@@ -14,8 +14,8 @@ source /home/users/m/mikriukov/venvs/DADH/bin/activate
 echo "Loading cuda..."
 module load nvidia/cuda/10.1
 
-echo "ResNet18"
-python3 resnet18.py
-
 echo "BERT"
 python3 bert.py
+
+echo "ResNet18"
+python3 resnet18.py

@@ -183,6 +183,7 @@ print('# Load data')
 ########################################################################################################################
 
 dataset_file = FILEPATH + 'dataset_RSICD.h5'
+# dataset_file = r"/media/george/Data/RS data/dataset_RSICD.h5"
 print('dataset_file:', dataset_file)
 images, labels_one_hot, labels, captions, bow_repr, bow_terms = get_data_from_h5(dataset_file)
 print("'images' shape", images.shape)
